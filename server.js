@@ -6,9 +6,9 @@ const knex = require('knex'); // untuk akses database
 const db = knex({
     client: 'pg',
     connection: {
-        host: '127.0.0.1',
-        user: 'postgres',
-        password: 'Gabriel02/',
+        host: '192.168.4.4',
+        user: 'admin',
+        password: 'password123',
         database: 'loginformgis'
     }
 })
