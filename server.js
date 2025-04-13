@@ -1,17 +1,17 @@
-const express = require('express'); //untuk create server
-const path = require('path'); //untuk mengetahui lokasi html, css
-const bodyParser = require('body-parser'); //untuk send & receive data
-const knex = require('knex'); // untuk akses database
+const express = require('express'); // untuk create server
+const path = require('path'); // untuk mengetahui lokasi html, css
+const bodyParser = require('body-parser'); // untuk send & receive data
 
-const db = knex({
-    client: 'pg',
+const knex = require('knex')({
+    client: 'mysql',
     connection: {
         host: 'localhost',
-        user: 'admin',
-        password: 'password123',
-        database: 'loginformgis'
+        user: 'root',
+        password: '',
+        database: 'leaflet_maps'
     }
-})
+});
+
 const app = express();
 
 let initialPath = path.join(__dirname, "public");
@@ -34,30 +34,44 @@ app.get('/register', (req, res) => {
 app.post('/register-user', (req, res) => {
     const { name, email, password } = req.body;
 
-    if(!name.length || !email.length || !password.length){
-        res.json('Fill all the fields');
-    } else{
-        db("users").insert({
-            name: name,
-            email: email,
-            password: password
+    // Validasi input
+    if (!name.length || !email.length || !password.length) {
+        return res.json('Fill all the fields');  // Menghentikan eksekusi setelah respons
+    }
+
+    // Cek apakah email sudah ada
+    knex("users")
+        .where({ email: email })
+        .first()
+        .then(existingUser => {
+            if (existingUser) {
+                return res.json('Email already exists');  // Menghentikan eksekusi setelah respons
+            }
+
+            // Jika email tidak ada, lanjutkan dengan penyimpanan user baru
+            return knex("users")
+                .insert({ name: name, email: email, password: password });
         })
-        .returning(["name", "email"])
-        .then(data => {
-            res.json(data[0])
+        .then(() => {
+            // Ambil ID terakhir yang disisipkan
+            return knex.raw('SELECT LAST_INSERT_ID() AS id');
+        })
+        .then(() => {
+            return res.json({ message: 'User registered successfully' });  // Mengirim pesan tanpa ID
         })
         .catch(err => {
-            if(err.detail. inclludes('Already exists')){
-                res.json('Email already exists');
+            // Pastikan hanya satu respons dikirim
+            if (!res.headersSent) {
+                console.error(err);
+                return res.status(500).json('Terjadi kesalahan saat menyimpan user');  // Menghentikan eksekusi setelah respons
             }
-        })
-    }
-})
+        });
+});
 
 app.post('/login-user', (req, res) => {
     const { email, password } = req.body;
 
-    db.select('name', 'email')
+    knex.select('name', 'email')
     .from('users')
     .where({
         email: email,
@@ -76,11 +90,11 @@ app.post('/tambah-titik', (req, res) => {
     const { latitude, longitude, name, description } = req.body;
 
     if (latitude && longitude) {
-        db('titik').insert({
+        knex('titik').insert({
             latitude: latitude,
             longitude: longitude,
-            name: name || null,  // Jika tidak ada nama, simpan sebagai NULL
-            description: description || null  // Jika tidak ada deskripsi, simpan sebagai NULL
+            name: name || null,
+            description: description || null
         })
         .returning('id')
         .then(result => {
