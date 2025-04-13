@@ -6,7 +6,7 @@ const knex = require('knex'); // untuk akses database
 const db = knex({
     client: 'pg',
     connection: {
-        host: '192.168.4.4',
+        host: 'localhost',
         user: 'admin',
         password: 'password123',
         database: 'loginformgis'
@@ -71,6 +71,29 @@ app.post('/login-user', (req, res) => {
         }
     })
 })
+
+app.post('/tambah-titik', (req, res) => {
+    const { latitude, longitude, name, description } = req.body;
+
+    if (latitude && longitude) {
+        db('titik').insert({
+            latitude: latitude,
+            longitude: longitude,
+            name: name || null,  // Jika tidak ada nama, simpan sebagai NULL
+            description: description || null  // Jika tidak ada deskripsi, simpan sebagai NULL
+        })
+        .returning('id')
+        .then(result => {
+            res.json({ message: 'Titik berhasil disimpan', id: result[0] });
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(500).json({ message: 'Terjadi kesalahan saat menyimpan titik' });
+        });
+    } else {
+        res.status(400).json({ message: 'Koordinat tidak valid' });
+    }
+});
 
 app.listen(3000, (req, res) => {
     console.log('listening on port 3000......')
