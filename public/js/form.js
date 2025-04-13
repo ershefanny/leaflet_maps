@@ -12,7 +12,6 @@ window.onload = () => {
     }
 }
 
-//validasi
 const name = document.querySelector('.name') || null;
 const email = document.querySelector('.email');
 const password = document.querySelector('.password');

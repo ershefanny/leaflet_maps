@@ -34,36 +34,31 @@ app.get('/register', (req, res) => {
 app.post('/register-user', (req, res) => {
     const { name, email, password } = req.body;
 
-    // Validasi input
     if (!name.length || !email.length || !password.length) {
-        return res.json('Fill all the fields');  // Menghentikan eksekusi setelah respons
+        return res.json('Fill all the fields');
     }
 
-    // Cek apakah email sudah ada
     knex("users")
         .where({ email: email })
         .first()
         .then(existingUser => {
             if (existingUser) {
-                return res.json('Email already exists');  // Menghentikan eksekusi setelah respons
+                return res.json('Email already exists');
             }
 
-            // Jika email tidak ada, lanjutkan dengan penyimpanan user baru
             return knex("users")
                 .insert({ name: name, email: email, password: password });
         })
         .then(() => {
-            // Ambil ID terakhir yang disisipkan
             return knex.raw('SELECT LAST_INSERT_ID() AS id');
         })
         .then(() => {
-            return res.json({ message: 'User registered successfully' });  // Mengirim pesan tanpa ID
+            return res.json({ message: 'User registered successfully' });
         })
         .catch(err => {
-            // Pastikan hanya satu respons dikirim
             if (!res.headersSent) {
                 console.error(err);
-                return res.status(500).json('Terjadi kesalahan saat menyimpan user');  // Menghentikan eksekusi setelah respons
+                return res.status(500).json('Terjadi kesalahan saat menyimpan user');
             }
         });
 });
