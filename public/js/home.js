@@ -69,7 +69,7 @@ map.on('click', function (e) {
         const name = document.getElementById('name').value;
         const description = document.getElementById('description').value;
 
-        fetch('http://localhost:3000/tambah-titik', {
+        fetch('https://gis_2205551102.manpits.xyz/tambah-titik', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

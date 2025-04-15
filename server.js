@@ -86,6 +86,7 @@ app.post('/login-user', (req, res) => {
 
 app.post('/tambah-titik', (req, res) => {
     const { latitude, longitude, name, description } = req.body;
+    console.log('Data diterima:', latitude, longitude, name, description);
 
     if (latitude && longitude) {
         knex('titik').insert({
