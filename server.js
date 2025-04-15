@@ -1,7 +1,9 @@
 const express = require('express'); // untuk create server
 const path = require('path'); // untuk mengetahui lokasi html, css
 const bodyParser = require('body-parser'); // untuk send & receive data
+
 require('dotenv').config(); //file env
+console.log(process.env.DB_HOST, process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
 
 const knex = require('knex')({
     client: 'mysql',
