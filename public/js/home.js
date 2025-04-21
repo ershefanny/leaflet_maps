@@ -5,6 +5,21 @@ window.onload = () => {
         location.href = '/login';
     } else{
         greeting.innerHTML = `Hello ${sessionStorage.name}`;
+
+        const userId = sessionStorage.getItem('userId');
+
+        fetch (`/titik-user/${userId}`)
+        .then(res => res.json())
+        .then(titikList => {
+            titikList.forEach(titik => {
+                L.marker([titik.latitude, titik.longitude])
+                .addTo(map)
+                .bindPopup(`<b>${titik.name || 'Tanpa Nama'}</b><br>${titik.description || ''}`);
+            });
+        })
+        .catch(err => {
+            console.error('Gagal mengambil titik:', err);
+        });
     }
 }
 

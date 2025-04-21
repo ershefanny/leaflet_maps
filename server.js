@@ -109,6 +109,18 @@ app.post('/tambah-titik', (req, res) => {
     }
 });
 
+app.get('/titik-user/:id', (req, res) => {
+    const userId = req.params.id;
+
+    knex('titik')
+    .where({ user_id: userId })
+    .then(rows => res.json(rows))
+    .catch(err => {
+        console.error('Error saat ambil titik:', err);
+        res.status(500).json({ message: 'Gagal mengambil titik' })
+    });
+});
+
 app.listen(3000, (req, res) => {
     console.log('listening on port 3000......')
 })
