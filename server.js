@@ -69,7 +69,7 @@ app.post('/register-user', (req, res) => {
 app.post('/login-user', (req, res) => {
     const { email, password } = req.body;
 
-    knex.select('name', 'email')
+    knex.select('id', 'name', 'email')
     .from('users')
     .where({
         email: email,
@@ -85,7 +85,7 @@ app.post('/login-user', (req, res) => {
 })
 
 app.post('/tambah-titik', (req, res) => {
-    const { latitude, longitude, name, description } = req.body;
+    const { latitude, longitude, name, description, user_id } = req.body;
     console.log('Data diterima:', latitude, longitude, name, description);
 
     if (latitude && longitude) {
@@ -93,7 +93,8 @@ app.post('/tambah-titik', (req, res) => {
             latitude: latitude,
             longitude: longitude,
             name: name || null,
-            description: description || null
+            description: description || null,
+            user_id: user_id
         })
         .returning('id')
         .then(result => {

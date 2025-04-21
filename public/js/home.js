@@ -68,13 +68,14 @@ map.on('click', function (e) {
         event.preventDefault();
         const name = document.getElementById('name').value;
         const description = document.getElementById('description').value;
+        const user_id = sessionStorage.getItem("userId");
 
         fetch('https://gis_2205551102.manpits.xyz/tambah-titik', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ latitude, longitude, name, description }),
+            body: JSON.stringify({ latitude, longitude, name, description, user_id }),
         })
         .then(response => response.json())
         .then(data => {
