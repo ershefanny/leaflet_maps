@@ -16,11 +16,16 @@
 		<h1 class = "greeting"></h1>
 		<div id="map"></div>
 
-		<div class="btn-container">
-			<button class="btn" onclick="changeMap('osm')">OpenStreetMap</button>
-			<button class="btn" onclick="changeMap('satellite')">Satellite</button>
-			<button class="btn" onclick="changeMap('topo')">Topographic</button>
+		<div class="basemap-icon-container">
+			<img src="img/layer-icon.png" alt="Basemap" class="basemap-icon" />
+			<div class="basemap-dropdown hidden">
+				<div class="basemap-option" onclick="changeMap('osm')">OpenStreetMap</div>
+				<div class="basemap-option" onclick="changeMap('satellite')">Satellite</div>
+				<div class="basemap-option" onclick="changeMap('topo')">Topographic</div>
+			</div>
 		</div>
+</div>
+
 	</div>
 
 	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

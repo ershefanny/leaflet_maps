@@ -21,6 +21,13 @@ window.onload = () => {
             console.error('Gagal mengambil titik:', err);
         });
     }
+
+    const icon = document.querySelector('.basemap-icon');
+    const dropdown = document.querySelector('.basemap-dropdown');
+
+    icon.addEventListener('click', () => {
+        dropdown.classList.toggle('hidden');
+    });
 }
 
 const logOut = document.querySelector('.logout');
